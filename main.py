@@ -107,9 +107,19 @@ def tableau_TFIDF(directory = "./cleaned"):
         i += 1
     return matrice_TFIDF
 
+def no_imp_mot(dico):
+    L=[]
+    for c,value in dico.items():
+        i=0
+        for valeur in value:
+            i+=valeur
+        if i==0:
+            L.append(c)
+    return(L)
+
 
 print(count_IDF())
-print(tableau_TFIDF())
+print(no_imp_mot(tableau_TFIDF()))
 clean_txt()
 
 
