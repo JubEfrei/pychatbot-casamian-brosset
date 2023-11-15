@@ -166,9 +166,37 @@ def president_eco(dico, l_p = nom_discours):
         if climat[i] != 0:
             return l_p[i]
 
+
+
+
+def president_TFIDF(directory = "./cleaned", liste_p = nom_discours, liste_nom=liste_noms):
+    files = list_of_files(directory)
+    l = len(liste_nom)
+    IDF = count_IDF(directory)
+    matrice_TFIDF = {}
+    for key in IDF.keys():
+        matrice_TFIDF[key] = [0 for i in range(l)]
+    i = 0
+    a = ""
+    for x in files:
+        file = directory + '/' + x
+        with open(file=file, mode="r", encoding="UTF8") as read:
+            TF = read.readline().strip()
+            a += " " + TF
+            if not (i < l or liste_p[i] == liste_p[i+1]):
+                TF = count_mots(a)
+                for key,value in TF.items():
+                    matrice_TFIDF[key][i] = IDF[key] * value
+                i += 1
+                a = ""
+    return matrice_TFIDF
+
+
+
 print(mot_chirac())
 print(nation(tableau_TFIDF()))
-print(president_eco(tableau_TFIDF()))
+print(president_TFIDF())
+
 clean_txt()
 
 
