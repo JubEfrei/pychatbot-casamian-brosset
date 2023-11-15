@@ -145,16 +145,30 @@ def mot_chirac():
             mot_max = c
     return(c)
 
+def nation(dico, l_p = nom_discours):
+    na = dico["nation"]
+    president = {}
+    for i in l_p:
+        president[i] = 0
+    for i in range(len(na)):
+        president[l_p[i]] += na[i]
+    max = 0
+    nom = ""
+    for key, value in president.items():
+        if max < value:
+            max = value
+            nom = key
+    return (list(president.keys()), nom)
 
-
-def president_eco(dic, l_p = nom_discours):
-    climat = dic["climat"]
+def president_eco(dico, l_p = nom_discours):
+    climat = dico["climat"]
     for i in range(len(climat)):
         if climat[i] != 0:
             return l_p[i]
 
-#print(mot_chirac())
-#print(president_eco(tableau_TFIDF()))
+print(mot_chirac())
+print(nation(tableau_TFIDF()))
+print(president_eco(tableau_TFIDF()))
 clean_txt()
 
 
