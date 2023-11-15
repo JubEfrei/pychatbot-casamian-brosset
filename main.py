@@ -93,3 +93,5 @@ def count_IDF(directory = "./cleaned"):
 print(count_IDF())
 print(liste_noms)
 clean_txt()
+
+
