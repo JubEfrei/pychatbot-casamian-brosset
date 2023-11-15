@@ -140,7 +140,6 @@ def president_eco(dic, l_p = nom_discours):
             return l_p[i]
 
 
-
 print(president_eco(tableau_TFIDF()))
 clean_txt()
 
