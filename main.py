@@ -91,17 +91,25 @@ def count_IDF(directory = "./cleaned"):
 
 
 def tableau_TFIDF(directory = "./cleaned"):
-    IDF = count_IDF(directory)
     files = list_of_files(directory)
-    for file in files:
+    l = len(files)
+    IDF = count_IDF(directory)
+    matrice_TFIDF = {}
+    for key in IDF.keys():
+        matrice_TFIDF[key] = [0 for i in range(l)]
+    i = 0
+    for x in files:
+        file = directory + '/' + x
         with open(file=file, mode="r", encoding="UTF8") as read:
             TF = count_mots(read.readline().strip())
         for key,value in TF.items():
-
+            matrice_TFIDF[key][i] = IDF[key] * value
+        i += 1
+    return matrice_TFIDF
 
 
 print(count_IDF())
-print(liste_noms)
+print(tableau_TFIDF())
 clean_txt()
 
 
