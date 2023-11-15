@@ -117,9 +117,22 @@ def no_imp_mot(dico):
             L.append(c)
     return(L)
 
+def imp_mot(dico):
+    max=0
+    mot_max=None
+    for c,value in dico.items():
+        i=0
+        for valeur in value:
+            i+=valeur
+        if i>max:
+            mot_max=c
+    return(mot_max)
+
+
+
 
 print(count_IDF())
-print(no_imp_mot(tableau_TFIDF()))
+print(imp_mot(tableau_TFIDF()))
 clean_txt()
 
 
