@@ -2,7 +2,7 @@ import os
 import math as m
 
 
-def list_of_files(directory, extension):
+def list_of_files(directory, extension="txt"):
     files_names = []
     for filename in os.listdir(directory):
         if filename.endswith(extension):
@@ -72,7 +72,7 @@ def count_IDF(directory = "./cleaned"):
     for i in files_names:
         file = directory + "/" + i
         with open(file=file, mode="r", encoding="UTF8") as read:
-            txt = read.readline()
+            txt = read.readline().strip()
             txt = txt.split()
             mots = []
             for j in txt:
@@ -87,6 +87,16 @@ def count_IDF(directory = "./cleaned"):
             count[key] = m.log(1/(value/8))
 
     return count
+
+
+
+def tableau_TFIDF(directory = "./cleaned"):
+    IDF = count_IDF(directory)
+    files = list_of_files(directory)
+    for file in files:
+        with open(file=file, mode="r", encoding="UTF8") as read:
+            TF = count_mots(read.readline().strip())
+        for key,value in TF.items():
 
 
 
