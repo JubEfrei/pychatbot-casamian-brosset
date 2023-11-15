@@ -131,6 +131,20 @@ def imp_mot(dico):
     return(mot_max)
 
 
+def mot_chirac():
+    with open("./cleaned/Nomination_Chirac1.txt", "r") as f1:
+        with open("./cleaned/Nomination_Chirac2.txt") as f2:
+            a=f1.readline()
+            b=f2.readline()
+            f=a+" "+b
+    dico=count_mots(f)
+    max = 0
+    mot_max = None
+    for c, value in dico.items():
+        if value > max:
+            mot_max = c
+    return(c)
+
 
 
 def president_eco(dic, l_p = nom_discours):
@@ -139,8 +153,8 @@ def president_eco(dic, l_p = nom_discours):
         if climat[i] != 0:
             return l_p[i]
 
-
-print(president_eco(tableau_TFIDF()))
+#print(mot_chirac())
+#print(president_eco(tableau_TFIDF()))
 clean_txt()
 
 
