@@ -41,12 +41,14 @@ def clean_txt(new_directory="./cleaned"):
 directory = "./speeches"
 files_names = list_of_files(directory, "txt")
 liste_noms = []
+nom_discours = []
 for i in files_names:
     nom = i.strip("Nomination_").strip(".txt")
     while ord(nom[-1]) > 47 and ord(nom[-1]) < 58:
         nom = nom.strip(nom[-1])
     if nom not in liste_noms:
         liste_noms.append(nom)
+    nom_discours.append(nom)
 
 liste_prenoms=["Jacques","Valérie","François","Emmanuel","François","Nicolas"]
 dico_nomp={}
@@ -118,8 +120,15 @@ def no_imp_mot(dico):
     return(L)
 
 
-print(count_IDF())
-print(no_imp_mot(tableau_TFIDF()))
+def president_eco(dic, l_p = nom_discours):
+    climat = dic["climat"]
+    for i in range(len(climat)):
+        if climat[i] != 0:
+            return l_p[i]
+
+
+
+print(president_eco(tableau_TFIDF()))
 clean_txt()
 
 
