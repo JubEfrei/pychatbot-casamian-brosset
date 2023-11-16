@@ -213,7 +213,7 @@ def mot_evo_hors_no_imp():
             a=f3.readline()
             b=f4.readline()
             fmi=a+" "+b
-    with open("./cleaned/Nomination_Giscard dEstaing.txt", "r", encoding="UTF8") as f5
+    with open("./cleaned/Nomination_Giscard dEstaing.txt", "r", encoding="UTF8") as f5:
         fg=f5.readline()
     with open("./cleaned/Nomination_Hollande.txt", "r", encoding="UTF8") as f6:
         fh=f6.readline()
