@@ -194,6 +194,35 @@ def president_TFIDF(directory = "./cleaned", liste_p = nom_discours, liste_nom=l
 
 
 
+
+def mot_evo_hors_no_imp():
+    files = list_of_files(directory)
+    l = len(files)
+    IDF = count_IDF(directory)
+    matrice_TFIDF = {}
+    for key in IDF.keys():
+        matrice_TFIDF[key] = [0 for i in range(l)]
+    i = 0
+    with open("./cleaned/Nomination_Chirac1.txt", "r", encoding="UTF8") as f1:
+        with open("./cleaned/Nomination_Chirac2.txt") as f2:
+            a=f1.readline()
+            b=f2.readline()
+            fc=a+" "+b
+    with open("./cleaned/Nomination_Mitterand1.txt", "r", encoding="UTF8") as f3:
+        with open("./cleaned/Nomination_Mitterand2.txt") as f4:
+            a=f3.readline()
+            b=f4.readline()
+            fmi=a+" "+b
+    with open("./cleaned/Nomination_Giscard dEstaing.txt", "r", encoding="UTF8") as f5
+        fg=f5.readline()
+    with open("./cleaned/Nomination_Hollande.txt", "r", encoding="UTF8") as f6:
+        fh=f6.readline()
+
+
+
+
+#print(mot_chirac())
+#print(president_eco(tableau_TFIDF()))
 print(mot_chirac())
 print(nation(tableau_TFIDF()))
 print(president_TFIDF())
