@@ -183,12 +183,13 @@ def president_TFIDF(directory = "./cleaned", liste_p = nom_discours, liste_nom=l
         with open(file=file, mode="r", encoding="UTF8") as read:
             TF = read.readline().strip()
             a += " " + TF
-            if not (i < l or liste_p[i] == liste_p[i+1]):
+            if i < l and not liste_p[i] == liste_p[i+1]:
                 TF = count_mots(a)
                 for key,value in TF.items():
                     matrice_TFIDF[key][i] = IDF[key] * value
-                i += 1
                 a = ""
+            i += 1
+
     return matrice_TFIDF
 
 
