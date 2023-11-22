@@ -190,7 +190,7 @@ def president_TFIDF(directory = "./cleaned", liste_p = nom_discours, liste_nom=l
                 a = ""
                 i += 1
     noimp=no_imp_mot(tableau_TFIDF())
-    liste_mot=list(matrice_TFIDF.keys())
+    liste_mot = no_imp_mot(matrice_TFIDF)
     for j in range(len(noimp)):
         liste_mot.remove(noimp[j])
     return liste_mot
@@ -230,7 +230,7 @@ def mot_evo_hors_no_imp():
 #print(nation(tableau_TFIDF()))
 print(no_imp_mot(tableau_TFIDF()))
 print(president_TFIDF())
-print(tableau_TFIDF())
+#print(tableau_TFIDF())
 
 clean_txt()
 
