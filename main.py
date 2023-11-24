@@ -249,14 +249,48 @@ def mot_evo_hors_no_imp():
         fh=f6.readline()
 
 
+#########################################################################################################
+############################################ PROGRAMME PRINCIPAL ########################################
+run=0
+while run==0:
+    fonction=input("entrez le nom d'une fonction pour accéder à celle-ci, entrez '?' pour voir le catalogue des commandes disponibles, ou entrez 'end' pour arreter le programme. ")
+    if fonction=="no_imp_mot()":
+        print(no_imp_mot(tableau_TFIDF()))
+    elif fonction=="imp_mot()":
+        print(imp_mot(tableau_TFIDF()))
+    elif fonction=="mot_chirac()":
+        print(mot_chirac())
+    elif fonction=="nation()":
+        print(nation(tableau_TFIDF()))
+    elif fonction=="president_eco()":
+        print(president_eco(tableau_TFIDF()))
+    elif fonction=="mot_evo_hors_no_imp()":
+        print(mot_evo_hors_no_imp())
+    elif fonction=="?":
+        print("Voici le catalogue des fonctions disponibles:", " \n"
+              "no_imp_mot() : Affiche la liste des mots les moins importants dans le corpus de documents", " \n"
+              "imp_mot() : Affiche le(s) mot(s) ayant le score TD-IDF le plus élevé", " \n"
+              "mot_chirac() : Indique le(s) mot(s) le(s) plus répété(s) par le président Chirac", " \n"
+              "nation() : Indique le(s) nom(s) du (des) président(s) qui a (ont) parlé de la « Nation » et celui qui l’a répété le plus de fois", " \n"
+              "president_eco() : Indique le premier président à parler du climat et/ou de l’écologie, \n"
+              "mot_evo_hors_no_imp() : Hormis les mots dits « non importants », affiche le(s) mot(s) que tous les présidents ont évoqués", " \n")
+    elif fonction=="end":
+        run=1
+    else:
+        print("Désolé, cette commande n'existe pas veuillez réessayer ou bien consulter le catalogue des commandes en entrant '?' ")
+
+
+
+
+
 
 
 #print(mot_chirac())
 #print(president_eco(tableau_TFIDF()))
 #print(mot_chirac())
 #print(nation(tableau_TFIDF()))
-print(no_imp_mot(tableau_TFIDF()))
-print(president_TFIDF())
+#print(no_imp_mot(tableau_TFIDF()))
+#print(president_TFIDF())
 #print(tableau_TFIDF())
 
 clean_txt()
