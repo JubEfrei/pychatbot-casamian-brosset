@@ -56,6 +56,34 @@ for i in range(len(liste_noms)):
     dico_nomp[liste_noms[i]]=liste_prenoms[i]
 
 
+def Pcleaned(directory = "./cleaned", n_directory = "./PCleaned", liste_nom=liste_noms, liste_p=nom_discours):
+    files_names = list_of_files(directory, "txt")
+    i = 0
+    j = 0
+    l = len(liste_p) - 1
+    a = ""
+    for f in files_names:
+        file = directory + "/" + f
+        with open(file=file, mode="r", encoding="UTF8") as read:
+            txt = read.readline().strip()
+            a += " " + txt
+            if i < l and liste_p[i] != liste_p[i + 1]:
+                n_f = n_directory + "/" + liste_nom[j]
+                with open(file=n_f, mode="w", encoding="UTF8") as write:
+                    write.write(a)
+                a = ""
+                j += 1
+        i += 1
+    matrice = tableau_TFIDF(directory="./PCleaned")
+    noimp = no_imp_mot(tableau_TFIDF())
+    liste_mot = no_imp_mot(matrice)
+    print(liste_mot)
+    print(matrice)
+    for j in range(len(noimp)):
+        if noimp[j] in liste_mot:
+            liste_mot.remove(noimp[j])
+    return liste_mot
+
 
 
 def count_mots(txt):
@@ -87,37 +115,9 @@ def count_IDF(directory = "./cleaned"):
 
     for key, value in count.items():
             count[key] = m.log10(1/(value/8))
-
     return count
 
-def count_IDF_pres(directory="./cleaned", liste_nom=liste_noms, liste_p = nom_discours):
-    files_names = list_of_files(directory, "txt")
-    count = {}
-    l = len(liste_nom)
-    a = ""
-    x = 0
-    for i in files_names:
-        file = directory + "/" + i
-        with open(file=file, mode="r", encoding="UTF8") as read:
-            txt = read.readline().strip()
-            a += " " + txt
-            if x < l and not liste_p[x] == liste_p[x + 1]:
-                a = a.split()
-                mots = []
-                for j in a:
-                    if not j in mots:
-                        if j in count:
-                            count[j] += 1
-                        else:
-                            count[j] = 1
-                        mots.append(j)
-                a = ""
-        x += 1
 
-    for key, value in count.items():
-            count[key] = m.log10(1/(value/8))
-
-    return count
 def tableau_TFIDF(directory = "./cleaned"):
     files = list_of_files(directory)
     l = len(files)
@@ -193,62 +193,6 @@ def president_eco(dico, l_p = nom_discours):
             return l_p[i]
 
 
-
-
-def president_TFIDF(directory = "./cleaned", liste_p = nom_discours, liste_nom=liste_noms):
-    files = list_of_files(directory)
-    l = len(liste_nom)
-    IDF = count_IDF_pres(directory)
-    matrice_TFIDF = {}
-    for key in IDF.keys():
-        matrice_TFIDF[key] = [0 for i in range(l)]
-    i = 0
-    a = ""
-    for x in files:
-        file = directory + '/' + x
-        with open(file=file, mode="r", encoding="UTF8") as read:
-            TF = read.readline().strip()
-            a += " " + TF
-            if i < l and not liste_p[i] == liste_p[i+1]:
-                TF = count_mots(a)
-                for key,value in TF.items():
-                    matrice_TFIDF[key][i] = IDF[key] * value
-                a = ""
-            i += 1
-    noimp=no_imp_mot(tableau_TFIDF())
-    liste_mot = no_imp_mot(matrice_TFIDF)
-    for j in range(len(noimp)):
-        if noimp[j] in liste_mot:
-            liste_mot.remove(noimp[j])
-    return
-
-
-
-
-def mot_evo_hors_no_imp():
-    files = list_of_files(directory)
-    l = len(files)
-    IDF = count_IDF(directory)
-    matrice_TFIDF = {}
-    for key in IDF.keys():
-        matrice_TFIDF[key] = [0 for i in range(l)]
-    i = 0
-    with open("./cleaned/Nomination_Chirac1.txt", "r", encoding="UTF8") as f1:
-        with open("./cleaned/Nomination_Chirac2.txt") as f2:
-            a=f1.readline()
-            b=f2.readline()
-            fc=a+" "+b
-    with open("./cleaned/Nomination_Mitterrand1.txt", "r", encoding="UTF8") as f3:
-        with open("./cleaned/Nomination_Mitterrand2.txt") as f4:
-            a=f3.readline()
-            b=f4.readline()
-            fmi=a+" "+b
-    with open("./cleaned/Nomination_Giscard dEstaing.txt", "r", encoding="UTF8") as f5:
-        fg=f5.readline()
-    with open("./cleaned/Nomination_Hollande.txt", "r", encoding="UTF8") as f6:
-        fh=f6.readline()
-
-
 #########################################################################################################
 ############################################ PROGRAMME PRINCIPAL ########################################
 run=0
@@ -264,8 +208,10 @@ while run==0:
         print(nation(tableau_TFIDF()))
     elif fonction=="president_eco()":
         print(president_eco(tableau_TFIDF()))
-    elif fonction=="president_TFIDF()":
-        print(president_TFIDF())
+    elif fonction=="Pcleaned()":
+        print(Pcleaned())
+    elif fonction == "matrice":
+        print(tableau_TFIDF())
     elif fonction=="?":
         print("Voici le catalogue des fonctions disponibles:", " \n"
               "no_imp_mot() : Affiche la liste des mots les moins importants dans le corpus de documents", " \n"
@@ -273,7 +219,7 @@ while run==0:
               "mot_chirac() : Indique le(s) mot(s) le(s) plus répété(s) par le président Chirac", " \n"
               "nation() : Indique le(s) nom(s) du (des) président(s) qui a (ont) parlé de la « Nation » et celui qui l’a répété le plus de fois", " \n"
               "president_eco() : Indique le premier président à parler du climat et/ou de l’écologie, \n"
-              "mot_evo_hors_no_imp() : Hormis les mots dits « non importants », affiche le(s) mot(s) que tous les présidents ont évoqués", " \n")
+              "Pcleaned() : Hormis les mots dits « non importants », affiche le(s) mot(s) que tous les présidents ont évoqués", " \n")
     elif fonction=="end":
         run=1
     else:
