@@ -86,7 +86,7 @@ def count_IDF(directory = "./cleaned"):
                     mots.append(j)
 
     for key, value in count.items():
-            count[key] = m.log(1/(value/8))
+            count[key] = m.log10(1/(value/8))
 
     return count
 
@@ -115,7 +115,7 @@ def count_IDF_pres(directory="./cleaned", liste_nom=liste_noms, liste_p = nom_di
         x += 1
 
     for key, value in count.items():
-            count[key] = m.log(1/(value/8))
+            count[key] = m.log10(1/(value/8))
 
     return count
 def tableau_TFIDF(directory = "./cleaned"):
@@ -238,8 +238,8 @@ def mot_evo_hors_no_imp():
             a=f1.readline()
             b=f2.readline()
             fc=a+" "+b
-    with open("./cleaned/Nomination_Mitterand1.txt", "r", encoding="UTF8") as f3:
-        with open("./cleaned/Nomination_Mitterand2.txt") as f4:
+    with open("./cleaned/Nomination_Mitterrand1.txt", "r", encoding="UTF8") as f3:
+        with open("./cleaned/Nomination_Mitterrand2.txt") as f4:
             a=f3.readline()
             b=f4.readline()
             fmi=a+" "+b
@@ -264,8 +264,8 @@ while run==0:
         print(nation(tableau_TFIDF()))
     elif fonction=="president_eco()":
         print(president_eco(tableau_TFIDF()))
-    elif fonction=="mot_evo_hors_no_imp()":
-        print(mot_evo_hors_no_imp())
+    elif fonction=="president_TFIDF()":
+        print(president_TFIDF())
     elif fonction=="?":
         print("Voici le catalogue des fonctions disponibles:", " \n"
               "no_imp_mot() : Affiche la liste des mots les moins importants dans le corpus de documents", " \n"
