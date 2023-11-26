@@ -103,6 +103,7 @@ def tableau_TFIDF(directory = "./cleaned"):
             TF = count_mots(read.readline().strip())
         for key,value in TF.items():
             matrice_TFIDF[key][i] = IDF[key] * value
+            print("1")
         i += 1
     return matrice_TFIDF
 
@@ -186,6 +187,7 @@ def Pcleaned(directory = "./cleaned", n_directory = "./PCleaned", liste_nom=list
         write.write(a)
 
     matrice = tableau_TFIDF(directory="./PCleaned")
+    print(matrice)
     noimp = no_imp_mot(tableau_TFIDF())
     liste_mot = no_imp_mot(matrice)
     for j in range(len(noimp)):
@@ -210,10 +212,11 @@ while run==0:
         print(president_eco(tableau_TFIDF()))
     elif fonction=="Pcleaned()":
         print(Pcleaned())
-    elif fonction == "matrice":
+    elif fonction == "matrice()":
         print(tableau_TFIDF())
     elif fonction=="?":
         print("Voici le catalogue des fonctions disponibles:", " \n"
+              "matrice() : Affiche la matrice TF-IDF"
               "no_imp_mot() : Affiche la liste des mots les moins importants dans le corpus de documents", " \n"
               "imp_mot() : Affiche le(s) mot(s) ayant le score TD-IDF le plus élevé", " \n"
               "mot_chirac() : Indique le(s) mot(s) le(s) plus répété(s) par le président Chirac", " \n"
