@@ -56,35 +56,6 @@ for i in range(len(liste_noms)):
     dico_nomp[liste_noms[i]]=liste_prenoms[i]
 
 
-def Pcleaned(directory = "./cleaned", n_directory = "./PCleaned", liste_nom=liste_noms, liste_p=nom_discours):
-    files_names = list_of_files(directory, "txt")
-    i = 0
-    j = 0
-    l = len(liste_p) - 1
-    a = ""
-    for f in files_names:
-        file = directory + "/" + f
-        with open(file=file, mode="r", encoding="UTF8") as read:
-            txt = read.readline().strip()
-            a += " " + txt
-            if i < l and liste_p[i] != liste_p[i + 1]:
-                n_f = n_directory + "/" + liste_nom[j]
-                with open(file=n_f, mode="w", encoding="UTF8") as write:
-                    write.write(a)
-                a = ""
-                j += 1
-        i += 1
-    matrice = tableau_TFIDF(directory="./PCleaned")
-    noimp = no_imp_mot(tableau_TFIDF())
-    liste_mot = no_imp_mot(matrice)
-    print(liste_mot)
-    print(matrice)
-    for j in range(len(noimp)):
-        if noimp[j] in liste_mot:
-            liste_mot.remove(noimp[j])
-    return liste_mot
-
-
 
 def count_mots(txt):
     count = {}
@@ -192,6 +163,35 @@ def president_eco(dico, l_p = nom_discours):
         if climat[i] != 0:
             return l_p[i]
 
+def Pcleaned(directory = "./cleaned", n_directory = "./PCleaned", liste_nom=liste_noms, liste_p=nom_discours):
+    files_names = list_of_files(directory, "txt")
+    i = 0
+    j = 0
+    l = len(liste_p) - 1
+    a = ""
+    for f in files_names:
+        file = directory + "/" + f
+        with open(file=file, mode="r", encoding="UTF8") as read:
+            txt = read.readline().strip()
+            a += " " + txt
+            if i < l and liste_p[i] != liste_p[i + 1]:
+                n_f = n_directory + "/" + liste_nom[j]
+                with open(file=n_f, mode="w", encoding="UTF8") as write:
+                    write.write(a)
+                a = ""
+                j += 1
+        i += 1
+    n_f = n_directory + "/" + liste_nom[j]
+    with open(file=n_f, mode="w", encoding="UTF8") as write:
+        write.write(a)
+
+    matrice = tableau_TFIDF(directory="./PCleaned")
+    noimp = no_imp_mot(tableau_TFIDF())
+    liste_mot = no_imp_mot(matrice)
+    for j in range(len(noimp)):
+        if noimp[j] in liste_mot:
+            liste_mot.remove(noimp[j])
+    return liste_mot
 
 #########################################################################################################
 ############################################ PROGRAMME PRINCIPAL ########################################
