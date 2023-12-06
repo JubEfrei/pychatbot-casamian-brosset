@@ -103,7 +103,6 @@ def tableau_TFIDF(directory = "./cleaned"):
             TF = count_mots(read.readline().strip())
         for key,value in TF.items():
             matrice_TFIDF[key][i] = IDF[key] * value
-            print("1")
         i += 1
     return matrice_TFIDF
 
@@ -210,6 +209,13 @@ def question(phrase):
         if mot != "":
             res.append(mot)
     return res
+
+def identif_quest(mots:list, matrice:dict):
+    mots_present = []
+    for i in mots:
+        if i in matrice:
+            mots_present.append(i)
+    return mots_present
 
 
 #########################################################################################################
