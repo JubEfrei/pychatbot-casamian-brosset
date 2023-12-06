@@ -169,6 +169,16 @@ def Pcleaned(directory = "./cleaned", n_directory = "./PCleaned", liste_nom=list
     j = 0
     l = len(liste_p) - 1
     a = ""
+    nouv_liste = []
+    for y in range(len(liste_noms)):
+        mot = ""
+        for v in range(len(liste_noms[y])):
+            if liste_nom[y][v] != " ":
+                mot += liste_noms[y][v]
+            else:
+                mot += "_"
+        nouv_liste.append(mot)
+
     for f in files_names:
         file = directory + "/" + f
         with open(file=file, mode="r", encoding="UTF8") as read:
@@ -181,9 +191,9 @@ def Pcleaned(directory = "./cleaned", n_directory = "./PCleaned", liste_nom=list
                 a = ""
                 j += 1
         i += 1
-    n_f = n_directory + "/" + liste_nom[j]
-    with open(file=n_f, mode="w", encoding="UTF8") as write:
-        write.write(a)
+        n_f = n_directory + "/" + nouv_liste[j]
+        with open(file=n_f, mode="w", encoding="UTF8") as write:
+            write.write(a)
 
     matrice = tableau_TFIDF(directory="./PCleaned")
     print(matrice)
