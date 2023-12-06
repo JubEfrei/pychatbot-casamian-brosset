@@ -201,7 +201,7 @@ def question(phrase):
     for i in range(len(mots)):
         mot = ""
         for j in range(len(mots[i])):
-            if is_letter(mots[i][j]):
+            if is_letter(ord(mots[i][j])):
                 mot += mots[i][j]
             else:
                 if mot != "":
