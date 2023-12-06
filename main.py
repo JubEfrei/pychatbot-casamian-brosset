@@ -217,6 +217,29 @@ def identif_quest(mots:list, matrice:dict):
             mots_present.append(i)
     return mots_present
 
+def score_quetion(mots, mots_present, matrice_IDF):
+    matrice_mots = {}
+    for i in mots:
+        if i in mots_present:
+            if i in matrice_mots:
+                matrice_mots[i] += 1
+            else:
+                matrice_mots[i] = 1
+        else:
+            matrice_mots[i] = 0
+    for key, value in matrice_mots.items():
+        if value != 0:
+            matrice_mots[key] *= matrice_IDF[key]
+    return matrice_mots
+
+
+question = question(input("Poser une question"))
+matrice = tableau_TFIDF()
+score_idf = count_IDF()
+mots_present = identif_quest(question, matrice)
+print(question, mots_present)
+print(score_quetion(question, mots_present, score_idf))
+
 
 #########################################################################################################
 ############################################ PROGRAMME PRINCIPAL ########################################
