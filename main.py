@@ -195,6 +195,23 @@ def Pcleaned(directory = "./cleaned", n_directory = "./PCleaned", liste_nom=list
             liste_mot.remove(noimp[j])
     return liste_mot
 
+def question(phrase):
+    mots = phrase.lower().split()
+    res = []
+    for i in range(len(mots)):
+        mot = ""
+        for j in range(len(mots[i])):
+            if is_letter(mots[i][j]):
+                mot += mots[i][j]
+            else:
+                if mot != "":
+                    res.append(mot)
+                    mot = ""
+        if mot != "":
+            res.append(mot)
+    return res
+
+
 #########################################################################################################
 ############################################ PROGRAMME PRINCIPAL ########################################
 run=0
