@@ -236,11 +236,11 @@ def score_quetion(mots, mots_present, matrice_IDF):
                 matrice_mots[i] += 1
             else:
                 matrice_mots[i] = 1
+    for key, value in matrice_IDF.items():
+        if key in matrice_mots:
+            matrice_mots[key] *= value
         else:
-            matrice_mots[i] = 0
-    for key, value in matrice_mots.items():
-        if value != 0:
-            matrice_mots[key] *= matrice_IDF[key]
+            matrice_mots[key] = 0
     return matrice_mots
 
 def matrice_TFIDF(matrice):
@@ -255,8 +255,41 @@ def matrice_TFIDF(matrice):
 
     return new_matrice
 
+def produit_scalaire(a, b):
+    res = 0
+    for key in a.keys():
+        res += a[key] * b[key]
+    return res
 
-print(matrice_TFIDF(tableau_TFIDF()))
+def norme_vecteur(a):
+    res = 0
+    for value in a.values():
+        res += value ** 2
+    return m.sqrt(res)
+
+def calcul_similarite(a, b):
+    return produit_scalaire(a, b) / (norme_vecteur(a) * norme_vecteur(b))
+
+def doc_pertinent(questionTFIDF, matriceTFIDF):
+    score_max = (0, 0)
+    for key, value in matriceTFIDF.items():
+        print(value)
+        simil = calcul_similarite(questionTFIDF, value)
+        if simil > score_max[0]:
+            score_max = (simil, key)
+    return score_max[1]
+
+b = matrice_TFIDF(tableau_TFIDF())
+
+question = question(input("Poser une question"))
+matrice = tableau_TFIDF()
+score_idf = count_IDF()
+mots_present = identif_quest(question, matrice)
+a = score_quetion(question, mots_present, score_idf)
+print(a)
+print(doc_pertinent(a, b))
+
+
 
 """def mot_evo_hors_no_imp():
     files = list_of_files(directory)
