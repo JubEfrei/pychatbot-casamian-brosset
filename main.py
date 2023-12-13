@@ -250,8 +250,8 @@ def matrice_TFIDF(matrice):
         for i, value in enumerate(values):
             doc_key = f"Doc {i+1}"
             if doc_key not in new_matrice:
-                new_matrice[doc_key] = []
-            new_matrice[doc_key].append([key, value])
+                new_matrice[doc_key] = {}
+            new_matrice[doc_key][key] = value
 
     return new_matrice
 
