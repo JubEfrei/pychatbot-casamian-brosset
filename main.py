@@ -197,7 +197,7 @@ def Pcleaned(directory = "./cleaned", n_directory = "./PCleaned", liste_nom=list
             write.write(a)
 
     matrice = tableau_TFIDF(directory="./PCleaned")
-    print(matrice)
+    #print(matrice)
     noimp = no_imp_mot(tableau_TFIDF())
     liste_mot = no_imp_mot(matrice)
     for j in range(len(noimp)):
@@ -248,7 +248,7 @@ def matrice_TFIDF(matrice):
 
     for key, values in matrice.items():
         for i, value in enumerate(values):
-            doc_key = f"Doc {i+1}"
+            doc_key = files_names[i]
             if doc_key not in new_matrice:
                 new_matrice[doc_key] = {}
             new_matrice[doc_key][key] = value
@@ -273,21 +273,58 @@ def calcul_similarite(a, b):
 def doc_pertinent(questionTFIDF, matriceTFIDF):
     score_max = (0, 0)
     for key, value in matriceTFIDF.items():
-        print(value)
+        #print(value)
         simil = calcul_similarite(questionTFIDF, value)
         if simil > score_max[0]:
             score_max = (simil, key)
     return score_max[1]
 
 b = matrice_TFIDF(tableau_TFIDF())
+def mot_score_eleve(matrice):
+    max=0
+    mot=""
+    for key, value in matrice.items():
+            if value>max:
+                max=value
+                mot=key
+    return mot
 
-question = question(input("Poser une question"))
-matrice = tableau_TFIDF()
-score_idf = count_IDF()
-mots_present = identif_quest(question, matrice)
-a = score_quetion(question, mots_present, score_idf)
-print(a)
-print(doc_pertinent(a, b))
+def phrase_mot(doc,mot_imp):
+    ch="./Speeches/"
+    doc=ch + doc
+    with open(doc, "r", encoding='utf-8') as f:
+        for l in f:
+            if mot_imp in l:
+                return str(l.strip())
+
+
+
+def reponse(dico, quest):
+    for key, val in dico.items():
+        if key in quest:
+            return str(val)
+
+question_starters = {
+ "comment": "Après analyse, ",
+ "pourquoi": "Car, ",
+ "peux tu": "Oui, bien sûr!"
+}
+
+
+
+#print(matrice_TFIDF(tableau_TFIDF()))
+
+while True :
+    question = question(input("Poser une question"))
+    matrice = tableau_TFIDF()
+    score_idf = count_IDF()
+    mots_present = identif_quest(question, matrice)
+    #print(question, mots_present)
+    #print(score_quetion(question, mots_present, score_idf))
+    #print(mot_score_eleve(score_quetion(question, mots_present, score_idf)))
+    #print(doc_pertinent(score_quetion(question, mots_present, score_idf), matrice_TFIDF(tableau_TFIDF())))
+    print(reponse(question_starters, question), phrase_mot(doc_pertinent(score_quetion(question, mots_present, score_idf), matrice_TFIDF(tableau_TFIDF())), mot_score_eleve(score_quetion(question, mots_present, score_idf))))
+
 
 
 
@@ -313,15 +350,11 @@ print(doc_pertinent(a, b))
         fg=f5.readline()
     with open("./cleaned/Nomination_Hollande.txt", "r", encoding="UTF8") as f6:
         fh=f6.readline()"""
-""" 
-question = question(input("Poser une question"))
-matrice = tableau_TFIDF()
-score_idf = count_IDF()
-mots_present = identif_quest(question, matrice)
-print(question, mots_present)
-print(score_quetion(question, mots_present, score_idf))
 
 
+
+
+"""
 #########################################################################################################
 ############################################ PROGRAMME PRINCIPAL ########################################
 run=0
