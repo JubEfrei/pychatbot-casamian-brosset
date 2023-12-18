@@ -106,7 +106,7 @@ def tableau_TFIDF(dossier ="./cleaned"):
     return matrice_TFIDF
 
 def no_imp_mot(dico):
-    "Prends une matrice TF-IDf comme entrée et renvoie la liste des mots non importants."
+    "Prends une matrice TF-IDF comme entrée et renvoie la liste des mots non importants."
     L=[]
     for c,value in dico.items():
         i=0
@@ -117,6 +117,7 @@ def no_imp_mot(dico):
     return(L)
 
 def imp_mot(dico):
+    "Prend comme entrée une matrice TF-IDF et renvoi le mot avec le score TF-IDF le plus élevé"
     max=0
     mot_max=None
     for c,value in dico.items():
@@ -128,7 +129,8 @@ def imp_mot(dico):
     return(mot_max)
 
 
-def mot_chirac():
+def mot_chirac(liste_mot_no_imp):
+    "Prend comme entrée une liste de mot non important et renvoi le moty le plus dit par Chirac (qui n'est pas un moit dit non important)"
     with open("./cleaned/Nomination_Chirac1.txt", "r") as f1:
         with open("./cleaned/Nomination_Chirac2.txt") as f2:
             a=f1.readline()
@@ -137,10 +139,11 @@ def mot_chirac():
     dico=count_mots(f)
     max = 0
     mot_max = None
-    for c, value in dico.items():
-        if value > max:
-            mot_max = c
-    return(c)
+    for cle, valeur in dico.items():
+        if valeur > max and cle not in liste_mot_no_imp:
+            mot_max = cle
+            max = valeur
+    return(mot_max)
 
 def nation(dico, l_p = nom_discours):
     na = dico["nation"]
