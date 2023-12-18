@@ -146,25 +146,34 @@ def mot_chirac(liste_mot_no_imp):
     return(mot_max)
 
 def nation(dico, l_p = nom_discours):
-    na = dico["nation"]
+    "Prend comme paramètre la matrice TFIDF et la liste des présidents puis renvoi le président qui parle le plus de la nation et combien de fois il en parle"
+    TFIDF_nation = dico["nation"]
     president = {}
     for i in l_p:
         president[i] = 0
-    for i in range(len(na)):
-        president[l_p[i]] += na[i]
+    for i in range(len(TFIDF_nation)):
+        president[l_p[i]] += TFIDF_nation[i]
     max = 0
     nom = ""
-    for cle, value in president.items():
-        if max < value:
-            max = value
+    for cle, valeur in president.items():
+        if max < valeur:
+            max = valeur
             nom = cle
     return (list(president.keys()), nom)
 
 def president_eco(dico, l_p = nom_discours):
+    "Pend comme paramètre l matrice TF-IDf et la liste des président et renvoie ceux qui parle de climat ou d'ecologie"
     climat = dico["climat"]
+    écolodie = dico["écologie"]
+    liste_pres = []
     for i in range(len(climat)):
         if climat[i] != 0:
-            return l_p[i]
+            liste_pres.append(l_p[i])
+    for i in range(len(climat)):
+        if climat[i] != 0:
+            if l_p[i] not in liste_pres:
+                liste_pres.append(l_p[i])
+    return liste_pres
 
 def Pcleaned(directory = "./cleaned", n_directory = "./PCleaned", liste_nom=liste_noms, liste_p=nom_discours):
     files_names = list_of_files(directory, "txt")
