@@ -303,6 +303,8 @@ def reponse(dico, quest):
     for key, val in dico.items():
         if key in quest:
             return str(val)
+        else :
+            return ""
 
 question_starters = {
  "comment": "Après analyse, ",
