@@ -1,118 +1,112 @@
 import os
 import math as m
 
+def list_of_files(dossier, extension="txt"):
+    "Renvoie la liste des fichiers dans le dossier donné"
+    files_names = []
+    for filename in os.listdir(dossier):
+        if filename.endswith(extension):
+            files_names.append(filename)
+    return files_names
+
+#initialisation de variables utilisé par diverses fonctions
 QUESTION_STARTER = {
  "comment": "Après analyse, ",
  "pourquoi": "Car, ",
  "peux tu": "Oui, bien sûr!"
 }
+liste_noms = []
+nom_discours = []
+dico_nomp={}
+liste_prenoms=["Jacques","Valérie","François","Emmanuel","François","Nicolas"]
+dossier = "./speeches"
+files_names = list_of_files(dossier, "txt")
 
-def list_of_files(directory, extension="txt"):
-    files_names = []
-    for filename in os.listdir(directory):
-        if filename.endswith(extension):
-            files_names.append(filename)
-    return files_names
 
 def is_letter(char):
+    "Prend en entrée un code ASCII et renvoi True sdi c'est une lettre, False si ce n'est pas une lettre "
     if 96 < char < 123 or 231 <= char <= 234 or char == 224 or char == 249 or char == 244 or char == 226:
         return True
     return False
 
-def clean_txt(new_directory="./cleaned"):
-    directory = "./speeches"
-    files_names = list_of_files(directory, "txt")
+def clean_txt(nouveau_dossier="./cleaned"):
+    "Prend en entré un dossier dans lequel il va réécrire tous les textes du fichier principale sous la forme d'une liste de mots"
+    dossier = "./speeches"
+    files_names = list_of_files(dossier, "txt")
     for i in files_names:
-        file = directory + "/" + i
-        new_file = new_directory + "/" + i
-        with open(file=file, mode="r", encoding="UTF8") as read, open(file=new_file, mode="w", encoding="UTF8") as write:
+        fichier = dossier + "/" + i
+        nouv_fichier = nouveau_dossier + "/" + i
+        with open(file=fichier, mode="r", encoding="UTF8") as read, open(file=nouv_fichier, mode="w", encoding="UTF8") as write:
             text = read.readlines()
-            cln = ""
+            clean = ""
             for j in text:
                 j = j.strip().lower()
                 for n in range(len(j)):
                     char = ord(j[n])
                     if char == 32 or is_letter(char):
-                        cln += chr(char)
+                        clean += chr(char)
                     elif char == 45 or char == 39:
                         if is_letter(ord(j[n-1])) and is_letter(ord(j[n+1])):
-                            cln += " "
+                            clean += " "
 
-                cln += " "
-            write.write(cln)
-
-
-
-directory = "./speeches"
-files_names = list_of_files(directory, "txt")
-liste_noms = []
-nom_discours = []
-for i in files_names:
-    nom = i.strip("Nomination_").strip(".txt")
-    while ord(nom[-1]) > 47 and ord(nom[-1]) < 58:
-        nom = nom.strip(nom[-1])
-    if nom not in liste_noms:
-        liste_noms.append(nom)
-    nom_discours.append(nom)
-
-liste_prenoms=["Jacques","Valérie","François","Emmanuel","François","Nicolas"]
-dico_nomp={}
-for i in range(len(liste_noms)):
-    dico_nomp[liste_noms[i]]=liste_prenoms[i]
-
-
+                clean += " "
+            write.write(clean)
 
 
 def count_mots(txt):
-    count = {}
+    "Prend une liste de mots et renvoie un dictionnaire avec comme clé chaque mots du texte et comme valeur leur nombre d'appariton dans la liste"
+    compte = {}
     txt = txt.split()
     for i in txt:
-        if i in count:
-            count[i] += 1
+        if i in compte:
+            compte[i] += 1
         else:
-            count[i] = 1
-    return count
+            compte[i] = 1
+    return compte
 
-def count_IDF(directory = "./cleaned"):
-    files_names = list_of_files(directory, "txt")
-    count = {}
+def count_IDF(dossier ="./cleaned"):
+    "Prend comme entrée un corpus de document et renvoie un dictionnaire avec chaque mot du corpus comme clé et comme valeur leur score IDF"
+    files_names = list_of_files(dossier, "txt")
+    compte = {}
     for i in files_names:
-        file = directory + "/" + i
+        file = dossier + "/" + i
         with open(file=file, mode="r", encoding="UTF8") as read:
             txt = read.readline().strip()
             txt = txt.split()
             mots = []
             for j in txt:
                 if not j in mots:
-                    if j in count:
-                        count[j] += 1
+                    if j in compte:
+                        compte[j] += 1
                     else:
-                        count[j] = 1
+                        compte[j] = 1
                     mots.append(j)
 
-    for cle, value in count.items():
-            count[cle] = m.log10(1/(value/8))
-    return count
+    for cle, value in compte.items():
+            compte[cle] = m.log10(1/(value/8))
+    return compte
 
 
-def tableau_TFIDF(directory = "./cleaned"):
-    files = list_of_files(directory)
-    l = len(files)
-    IDF = count_IDF(directory)
+def tableau_TFIDF(dossier ="./cleaned"):
+    "Prends comme entrée un dossier et renvoie la matrice TF-IDF de ce dossier sous forme de dictionnaire"
+    fichiers = list_of_files(dossier)
+    l = len(fichiers)
+    IDF = count_IDF(dossier)
     matrice_TFIDF = {}
     for cle in IDF.keys():
         matrice_TFIDF[cle] = [0 for i in range(l)]
     i = 0
-    for x in files:
-        file = directory + '/' + x
-        with open(file=file, mode="r", encoding="UTF8") as read:
+    for x in fichiers:
+        fichier = dossier + '/' + x
+        with open(file=fichier, mode="r", encoding="UTF8") as read:
             TF = count_mots(read.readline().strip())
-        for cle,value in TF.items():
-            matrice_TFIDF[cle][i] = IDF[cle] * value
+        for cle,valeur in TF.items():
+            matrice_TFIDF[cle][i] = IDF[cle] * valeur
         i += 1
     return matrice_TFIDF
 
 def no_imp_mot(dico):
+    "Prends une matrice TF-IDf comme entrée et renvoie la liste des mots non importants."
     L=[]
     for c,value in dico.items():
         i=0
@@ -201,7 +195,7 @@ def Pcleaned(directory = "./cleaned", n_directory = "./PCleaned", liste_nom=list
         with open(file=n_f, mode="w", encoding="UTF8") as write:
             write.write(a)
 
-    matrice = tableau_TFIDF(directory="./PCleaned")
+    matrice = tableau_TFIDF(dossier="./PCleaned")
     #print(matrice)
     noimp = no_imp_mot(tableau_TFIDF())
     liste_mot = no_imp_mot(matrice)
@@ -313,6 +307,18 @@ def reponse(dico, quest):
 
 
 #print(matrice_TFIDF(tableau_TFIDF()))
+
+
+for i in files_names:
+    nom = i.strip("Nomination_").strip(".txt")
+    while ord(nom[-1]) > 47 and ord(nom[-1]) < 58:
+        nom = nom.strip(nom[-1])
+    if nom not in liste_noms:
+        liste_noms.append(nom)
+    nom_discours.append(nom)
+
+for i in range(len(liste_noms)):
+    dico_nomp[liste_noms[i]] = liste_prenoms[i]
 
 while True :
     question = traitement_question(input("Poser une question"))
