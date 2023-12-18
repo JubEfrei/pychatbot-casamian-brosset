@@ -175,18 +175,19 @@ def president_eco(dico, l_p = nom_discours):
                 liste_pres.append(l_p[i])
     return liste_pres
 
-def Pcleaned(directory = "./cleaned", n_directory = "./PCleaned", liste_nom=liste_noms, liste_p=nom_discours):
+def Pcleaned(dossier ="./cleaned", nouv_dossier ="./PCleaned", liste_nom=liste_noms, liste_p=nom_discours):
     """Prend en paramètre le dossier des texte déja traité, un nouveau dossier de sortie, la liste des président et
     la liste qui associe chaque discours à un président pui regroupe tout les discours différents des même président
     sous un même dossier permettant la création d'un nouveau corpus de documents ou chaque fichier ne correspond plus
     à un discour mais à un président"""
-    files_names = list_of_files(directory, "txt")
+    files_names = list_of_files(dossier, "txt")
     i = 0
     j = 0
-    l = len(liste_p) - 1
-    a = ""
+    longeur = len(liste_p) - 1
+    discours = ""
     nouv_liste = []
-    for y in range(len(liste_noms)):
+
+    for y in range(len(liste_noms)):           #Remplace le " " de Giscard dEstaing par un tiret
         mot = ""
         for v in range(len(liste_noms[y])):
             if liste_nom[y][v] != " ":
@@ -196,25 +197,25 @@ def Pcleaned(directory = "./cleaned", n_directory = "./PCleaned", liste_nom=list
         nouv_liste.append(mot)
 
     for f in files_names:
-        file = directory + "/" + f
-        with open(file=file, mode="r", encoding="UTF8") as read:
+        fichier = dossier + "/" + f
+        with open(file=fichier, mode="r", encoding="UTF8") as read:    #regroupe les discours sous le même président
             txt = read.readline().strip()
-            a += " " + txt
-            if i < l and liste_p[i] != liste_p[i + 1]:
-                n_f = n_directory + "/" + liste_nom[j]
+            discours += " " + txt
+            if i < longeur and liste_p[i] != liste_p[i + 1]:
+                n_f = nouv_dossier + "/" + liste_nom[j]
                 with open(file=n_f, mode="w", encoding="UTF8") as write:
-                    write.write(a)
-                a = ""
+                    write.write(discours)
+                discours = ""
                 j += 1
         i += 1
-        n_f = n_directory + "/" + nouv_liste[j]
+        n_f = nouv_dossier + "/" + nouv_liste[j]                     #ajoute les discours dans le nouveau dossier
         with open(file=n_f, mode="w", encoding="UTF8") as write:
-            write.write(a)
+            write.write(discours)
 
-    matrice = tableau_TFIDF(dossier="./PCleaned")
-    #print(matrice)
-    noimp = no_imp_mot(tableau_TFIDF())
+    matrice = tableau_TFIDF(dossier="./PCleaned")                   #Fait la liste des mots dits par tous les présidents
+    noimp = no_imp_mot(tableau_TFIDF())                             #qui ne sont pas dans les mots dit non important
     liste_mot = no_imp_mot(matrice)
+
     for j in range(len(noimp)):
         if noimp[j] in liste_mot:
             liste_mot.remove(noimp[j])
@@ -324,7 +325,8 @@ def reponse(dico, quest):
 
 #print(matrice_TFIDF(tableau_TFIDF()))
 
-
+#Attribution des noms aux présiendents, avec un liste de noms, une liste de nom par rapport aux discours
+# et un dictionnaire de nom et de prénom
 for i in files_names:
     nom = i.strip("Nomination_").strip(".txt")
     while ord(nom[-1]) > 47 and ord(nom[-1]) < 58:
@@ -336,99 +338,53 @@ for i in files_names:
 for i in range(len(liste_noms)):
     dico_nomp[liste_noms[i]] = liste_prenoms[i]
 
-while True :
-    question = traitement_question(input("Poser une question"))
-    matrice = tableau_TFIDF()
-    score_idf = count_IDF()
-    mots_present = identif_quest(question, matrice)
-    #print(question, mots_present)
-    #print(score_quetion(question, mots_present, score_idf))
-    #print(mot_score_eleve(score_quetion(question, mots_present, score_idf)))
-    #print(doc_pertinent(score_quetion(question, mots_present, score_idf), matrice_TFIDF(tableau_TFIDF())))
-
-
-    print(reponse(QUESTION_STARTER, question), phrase_mot(doc_pertinent(score_quetion(question, mots_present, score_idf), matrice_TFIDF(tableau_TFIDF())), mot_score_eleve(score_quetion(question, mots_present, score_idf))))
-
-
-
-
-"""def mot_evo_hors_no_imp():
-    files = list_of_files(directory)
-    l = len(files)
-    IDF = count_IDF(directory)
-    matrice_TFIDF = {}
-    for cle in IDF.keys():
-        matrice_TFIDF[cle] = [0 for i in range(l)]
-    i = 0
-    with open("./cleaned/Nomination_Chirac1.txt", "r", encoding="UTF8") as f1:
-        with open("./cleaned/Nomination_Chirac2.txt") as f2:
-            a=f1.readline()
-            b=f2.readline()
-            fc=a+" "+b
-    with open("./cleaned/Nomination_Mitterrand1.txt", "r", encoding="UTF8") as f3:
-        with open("./cleaned/Nomination_Mitterrand2.txt") as f4:
-            a=f3.readline()
-            b=f4.readline()
-            fmi=a+" "+b
-    with open("./cleaned/Nomination_Giscard dEstaing.txt", "r", encoding="UTF8") as f5:
-        fg=f5.readline()
-    with open("./cleaned/Nomination_Hollande.txt", "r", encoding="UTF8") as f6:
-        fh=f6.readline()"""
-
-
-
-
-"""
 #########################################################################################################
 ############################################ PROGRAMME PRINCIPAL ########################################
 run=0
 while run==0:
     fonction=input("entrez le nom d'une fonction pour accéder à celle-ci, entrez '?' pour voir le catalogue des commandes disponibles, ou entrez 'end' pour arreter le programme. ")
-    if fonction=="no_imp_mot()":
+    if fonction=="mot non importants":
         print(no_imp_mot(tableau_TFIDF()))
     elif fonction=="imp_mot()":
         print(imp_mot(tableau_TFIDF()))
-    elif fonction=="mot_chirac()":
+    elif fonction=="mot de Chirac":
         print(mot_chirac())
-    elif fonction=="nation()":
+    elif fonction=="importance de la nation":
         print(nation(tableau_TFIDF()))
-    elif fonction=="president_eco()":
+    elif fonction=="importance de l'écologie":
         print(president_eco(tableau_TFIDF()))
-    elif fonction=="president_TFIDF()":
-        print(president_TFIDF())
-    elif fonction=="Pcleaned()":
+    elif fonction=="répétiton des présidents":
         print(Pcleaned())
-    elif fonction == "matrice()":
+    elif fonction == "matrice":
         print(tableau_TFIDF())
     elif fonction=="?":
         print("Voici le catalogue des fonctions disponibles:", " \n"
-              "matrice() : Affiche la matrice TF-IDF"
-              "no_imp_mot() : Affiche la liste des mots les moins importants dans le corpus de documents", " \n"
-              "imp_mot() : Affiche le(s) mot(s) ayant le score TD-IDF le plus élevé", " \n"
-              "mot_chirac() : Indique le(s) mot(s) le(s) plus répété(s) par le président Chirac", " \n"
-              "nation() : Indique le(s) nom(s) du (des) président(s) qui a (ont) parlé de la « Nation » et celui qui l’a répété le plus de fois", " \n"
-              "president_eco() : Indique le premier président à parler du climat et/ou de l’écologie, \n"
-              "president_TFIDF() : Hormis les mots dits « non importants », affiche le(s) mot(s) que tous les présidents ont évoqués", " \n"
-              "Pcleaned() : Hormis les mots dits « non importants », affiche le(s) mot(s) que tous les présidents ont évoqués", " \n")
+              "'matrice' : Affiche la matrice TF-IDF"
+              "'mot non importants' : Affiche la liste des mots les moins importants dans le corpus de documents", " \n"
+              "'mot important' : Affiche le(s) mot(s) ayant le score TD-IDF le plus élevé", " \n"
+              "'mot de Chirac' : Indique le(s) mot(s) le(s) plus répété(s) par le président Chirac", " \n"
+              "'importance de la nation' : Indique le(s) nom(s) du (des) président(s) qui a (ont) parlé de la « Nation » et celui qui l’a répété le plus de fois", " \n"
+              "'importance de l'écologie' : Indique le premier président à parler du climat et/ou de l’écologie, \n"
+              "'répétiton des présidents' : Hormis les mots dits « non importants », affiche le(s) mot(s) que tous les présidents ont évoqués", " \n"
+              "'ChatBot' : Ouvre le mode Chat bot, entrée end pour en sortir", " \n")
     elif fonction=="end":
         run=1
+    elif fonction == "Chatbot":
+        continu = True
+        while continu:
+            demande = input("Poser une question ('end' pour quitter le chat bot): ")
+            if demande != "end":
+                question = traitement_question(demande)
+                matrice = tableau_TFIDF()
+                score_idf = count_IDF()
+                mots_present = identif_quest(question, matrice)
+                print(reponse(QUESTION_STARTER, question), phrase_mot(
+                    doc_pertinent(score_quetion(question, mots_present, score_idf), matrice_TFIDF(tableau_TFIDF())),
+                    mot_score_eleve(score_quetion(question, mots_present, score_idf))))
+            else:
+                continu = False
+
     else:
         print("Désolé, cette commande n'existe pas veuillez réessayer ou bien consulter le catalogue des commandes en entrant '?' ")
 
-
-
-
-
-
-
-#print(mot_chirac())
-#print(president_eco(tableau_TFIDF()))
-#print(mot_chirac())
-#print(nation(tableau_TFIDF()))
-#print(no_imp_mot(tableau_TFIDF()))
-#print(president_TFIDF())
-print(tableau_TFIDF())
-
-clean_txt()
-"""
 
