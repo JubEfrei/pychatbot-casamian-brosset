@@ -205,7 +205,7 @@ def Pcleaned(directory = "./cleaned", n_directory = "./PCleaned", liste_nom=list
             liste_mot.remove(noimp[j])
     return liste_mot
 
-def question(phrase):
+def traitement_question(phrase):
     mots = phrase.lower().split()
     res = []
     for i in range(len(mots)):
@@ -317,7 +317,7 @@ question_starters = {
 #print(matrice_TFIDF(tableau_TFIDF()))
 
 while True :
-    question = question(input("Poser une question"))
+    question = traitement_question(input("Poser une question"))
     matrice = tableau_TFIDF()
     score_idf = count_IDF()
     mots_present = identif_quest(question, matrice)
