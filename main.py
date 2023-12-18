@@ -176,6 +176,10 @@ def president_eco(dico, l_p = nom_discours):
     return liste_pres
 
 def Pcleaned(directory = "./cleaned", n_directory = "./PCleaned", liste_nom=liste_noms, liste_p=nom_discours):
+    """Prend en paramètre le dossier des texte déja traité, un nouveau dossier de sortie, la liste des président et
+    la liste qui associe chaque discours à un président pui regroupe tout les discours différents des même président
+    sous un même dossier permettant la création d'un nouveau corpus de documents ou chaque fichier ne correspond plus
+    à un discour mais à un président"""
     files_names = list_of_files(directory, "txt")
     i = 0
     j = 0
