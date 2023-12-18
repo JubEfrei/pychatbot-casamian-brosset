@@ -1,6 +1,11 @@
 import os
 import math as m
 
+QUESTION_STARTER = {
+ "comment": "Après analyse, ",
+ "pourquoi": "Car, ",
+ "peux tu": "Oui, bien sûr!"
+}
 
 def list_of_files(directory, extension="txt"):
     files_names = []
@@ -85,8 +90,8 @@ def count_IDF(directory = "./cleaned"):
                         count[j] = 1
                     mots.append(j)
 
-    for key, value in count.items():
-            count[key] = m.log10(1/(value/8))
+    for cle, value in count.items():
+            count[cle] = m.log10(1/(value/8))
     return count
 
 
@@ -95,15 +100,15 @@ def tableau_TFIDF(directory = "./cleaned"):
     l = len(files)
     IDF = count_IDF(directory)
     matrice_TFIDF = {}
-    for key in IDF.keys():
-        matrice_TFIDF[key] = [0 for i in range(l)]
+    for cle in IDF.keys():
+        matrice_TFIDF[cle] = [0 for i in range(l)]
     i = 0
     for x in files:
         file = directory + '/' + x
         with open(file=file, mode="r", encoding="UTF8") as read:
             TF = count_mots(read.readline().strip())
-        for key,value in TF.items():
-            matrice_TFIDF[key][i] = IDF[key] * value
+        for cle,value in TF.items():
+            matrice_TFIDF[cle][i] = IDF[cle] * value
         i += 1
     return matrice_TFIDF
 
@@ -152,10 +157,10 @@ def nation(dico, l_p = nom_discours):
         president[l_p[i]] += na[i]
     max = 0
     nom = ""
-    for key, value in president.items():
+    for cle, value in president.items():
         if max < value:
             max = value
-            nom = key
+            nom = cle
     return (list(president.keys()), nom)
 
 def president_eco(dico, l_p = nom_discours):
@@ -236,29 +241,29 @@ def score_quetion(mots, mots_present, matrice_IDF):
                 matrice_mots[i] += 1
             else:
                 matrice_mots[i] = 1
-    for key, value in matrice_IDF.items():
-        if key in matrice_mots:
-            matrice_mots[key] *= value
+    for cle, value in matrice_IDF.items():
+        if cle in matrice_mots:
+            matrice_mots[cle] *= value
         else:
-            matrice_mots[key] = 0
+            matrice_mots[cle] = 0
     return matrice_mots
 
 def matrice_TFIDF(matrice):
     new_matrice = {}
 
-    for key, values in matrice.items():
+    for cle, values in matrice.items():
         for i, value in enumerate(values):
-            doc_key = files_names[i]
-            if doc_key not in new_matrice:
-                new_matrice[doc_key] = {}
-            new_matrice[doc_key][key] = value
+            cle_doc = files_names[i]
+            if cle_doc not in new_matrice:
+                new_matrice[cle_doc] = {}
+            new_matrice[cle_doc][cle] = value
 
     return new_matrice
 
 def produit_scalaire(a, b):
     res = 0
-    for key in a.keys():
-        res += a[key] * b[key]
+    for cle in a.keys():
+        res += a[cle] * b[cle]
     return res
 
 def norme_vecteur(a):
@@ -272,21 +277,21 @@ def calcul_similarite(a, b):
 
 def doc_pertinent(questionTFIDF, matriceTFIDF):
     score_max = (0, 0)
-    for key, value in matriceTFIDF.items():
+    for cle, value in matriceTFIDF.items():
         #print(value)
         simil = calcul_similarite(questionTFIDF, value)
         if simil > score_max[0]:
-            score_max = (simil, key)
+            score_max = (simil, cle)
     return score_max[1]
 
 b = matrice_TFIDF(tableau_TFIDF())
 def mot_score_eleve(matrice):
     max=0
     mot=""
-    for key, value in matrice.items():
+    for cle, value in matrice.items():
             if value>max:
                 max=value
-                mot=key
+                mot=cle
     return mot
 
 def phrase_mot(doc,mot_imp):
@@ -300,18 +305,11 @@ def phrase_mot(doc,mot_imp):
 
 
 def reponse(dico, quest):
-    for key, val in dico.items():
-        if key in quest:
+    for cle, val in dico.items():
+        if cle in quest:
             return str(val)
         else :
             return ""
-
-question_starters = {
- "comment": "Après analyse, ",
- "pourquoi": "Car, ",
- "peux tu": "Oui, bien sûr!"
-}
-
 
 
 #print(matrice_TFIDF(tableau_TFIDF()))
@@ -325,7 +323,9 @@ while True :
     #print(score_quetion(question, mots_present, score_idf))
     #print(mot_score_eleve(score_quetion(question, mots_present, score_idf)))
     #print(doc_pertinent(score_quetion(question, mots_present, score_idf), matrice_TFIDF(tableau_TFIDF())))
-    print(reponse(question_starters, question), phrase_mot(doc_pertinent(score_quetion(question, mots_present, score_idf), matrice_TFIDF(tableau_TFIDF())), mot_score_eleve(score_quetion(question, mots_present, score_idf))))
+
+
+    print(reponse(QUESTION_STARTER, question), phrase_mot(doc_pertinent(score_quetion(question, mots_present, score_idf), matrice_TFIDF(tableau_TFIDF())), mot_score_eleve(score_quetion(question, mots_present, score_idf))))
 
 
 
@@ -335,8 +335,8 @@ while True :
     l = len(files)
     IDF = count_IDF(directory)
     matrice_TFIDF = {}
-    for key in IDF.keys():
-        matrice_TFIDF[key] = [0 for i in range(l)]
+    for cle in IDF.keys():
+        matrice_TFIDF[cle] = [0 for i in range(l)]
     i = 0
     with open("./cleaned/Nomination_Chirac1.txt", "r", encoding="UTF8") as f1:
         with open("./cleaned/Nomination_Chirac2.txt") as f2:
