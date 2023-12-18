@@ -2,7 +2,7 @@ import os
 import math as m
 
 def list_of_files(dossier, extension="txt"):
-    "Renvoie la liste des fichiers dans le dossier donné"
+    """Renvoie la liste des fichiers dans le dossier donné"""
     files_names = []
     for filename in os.listdir(dossier):
         if filename.endswith(extension):
@@ -24,13 +24,14 @@ files_names = list_of_files(dossier, "txt")
 
 
 def is_letter(char):
-    "Prend en entrée un code ASCII et renvoi True sdi c'est une lettre, False si ce n'est pas une lettre "
+    """Prend en entrée un code ASCII et renvoi True sdi c'est une lettre, False si ce n'est pas une lettre """
     if 96 < char < 123 or 231 <= char <= 234 or char == 224 or char == 249 or char == 244 or char == 226:
         return True
     return False
 
 def clean_txt(nouveau_dossier="./cleaned"):
-    "Prend en entré un dossier dans lequel il va réécrire tous les textes du fichier principale sous la forme d'une liste de mots"
+    """Prend en entré un dossier dans lequel il va réécrire tous les textes du fichier principale
+    sous la forme d'une liste de mots"""
     dossier = "./speeches"
     files_names = list_of_files(dossier, "txt")
     for i in files_names:
@@ -54,7 +55,8 @@ def clean_txt(nouveau_dossier="./cleaned"):
 
 
 def count_mots(txt):
-    "Prend une liste de mots et renvoie un dictionnaire avec comme clé chaque mots du texte et comme valeur leur nombre d'appariton dans la liste"
+    """Prend une liste de mots et renvoie un dictionnaire avec comme clé chaque mots du texte et comme valeur
+    leur nombre d'appariton dans la liste"""
     compte = {}
     txt = txt.split()
     for i in txt:
@@ -65,7 +67,8 @@ def count_mots(txt):
     return compte
 
 def count_IDF(dossier ="./cleaned"):
-    "Prend comme entrée un corpus de document et renvoie un dictionnaire avec chaque mot du corpus comme clé et comme valeur leur score IDF"
+    """Prend comme entrée un corpus de document et renvoie un dictionnaire avec chaque mot du corpus
+    comme clé et comme valeur leur score IDF"""
     files_names = list_of_files(dossier, "txt")
     compte = {}
     for i in files_names:
@@ -88,7 +91,7 @@ def count_IDF(dossier ="./cleaned"):
 
 
 def tableau_TFIDF(dossier ="./cleaned"):
-    "Prends comme entrée un dossier et renvoie la matrice TF-IDF de ce dossier sous forme de dictionnaire"
+    """Prends comme entrée un dossier et renvoie la matrice TF-IDF de ce dossier sous forme de dictionnaire"""
     fichiers = list_of_files(dossier)
     l = len(fichiers)
     IDF = count_IDF(dossier)
@@ -106,7 +109,7 @@ def tableau_TFIDF(dossier ="./cleaned"):
     return matrice_TFIDF
 
 def no_imp_mot(dico):
-    "Prends une matrice TF-IDF comme entrée et renvoie la liste des mots non importants."
+    """Prends une matrice TF-IDF comme entrée et renvoie la liste des mots non importants."""
     L=[]
     for c,value in dico.items():
         i=0
@@ -117,7 +120,7 @@ def no_imp_mot(dico):
     return(L)
 
 def imp_mot(dico):
-    "Prend comme entrée une matrice TF-IDF et renvoi le mot avec le score TF-IDF le plus élevé"
+    """Prend comme entrée une matrice TF-IDF et renvoi le mot avec le score TF-IDF le plus élevé"""
     max=0
     mot_max=None
     for c,value in dico.items():
@@ -130,7 +133,8 @@ def imp_mot(dico):
 
 
 def mot_chirac(liste_mot_no_imp):
-    "Prend comme entrée une liste de mot non important et renvoi le moty le plus dit par Chirac (qui n'est pas un moit dit non important)"
+    """Prend comme entrée une liste de mot non important et renvoi le moty le plus dit par Chirac
+    (qui n'est pas un moit dit non important)"""
     with open("./cleaned/Nomination_Chirac1.txt", "r") as f1:
         with open("./cleaned/Nomination_Chirac2.txt") as f2:
             a=f1.readline()
@@ -146,7 +150,8 @@ def mot_chirac(liste_mot_no_imp):
     return(mot_max)
 
 def nation(dico, l_p = nom_discours):
-    "Prend comme paramètre la matrice TFIDF et la liste des présidents puis renvoi le président qui parle le plus de la nation et combien de fois il en parle"
+    """Prend comme paramètre la matrice TFIDF et la liste des présidents puis renvoi le président qui parle le
+    plus de la nation et combien de fois il en parle"""
     TFIDF_nation = dico["nation"]
     president = {}
     for i in l_p:
@@ -162,15 +167,16 @@ def nation(dico, l_p = nom_discours):
     return (list(president.keys()), nom)
 
 def president_eco(dico, l_p = nom_discours):
-    "Pend comme paramètre l matrice TF-IDf et la liste des président et renvoie ceux qui parle de climat ou d'ecologie"
+    """Pend comme paramètre l matrice TF-IDf et la liste des président et renvoie ceux qui
+    parle de climat ou d'ecologie"""
     climat = dico["climat"]
-    écolodie = dico["écologie"]
+    ecologie = dico["écologie"]
     liste_pres = []
     for i in range(len(climat)):
         if climat[i] != 0:
             liste_pres.append(l_p[i])
-    for i in range(len(climat)):
-        if climat[i] != 0:
+    for i in range(len(ecologie)):
+        if ecologie[i] != 0:
             if l_p[i] not in liste_pres:
                 liste_pres.append(l_p[i])
     return liste_pres
@@ -222,6 +228,7 @@ def Pcleaned(dossier ="./cleaned", nouv_dossier ="./PCleaned", liste_nom=liste_n
     return liste_mot
 
 def traitement_question(phrase):
+    """Prend en paramètre une phrase, une question par exemple, et renvoi la liste des mots de la question"""
     mots = phrase.lower().split()
     res = []
     for i in range(len(mots)):
@@ -238,6 +245,8 @@ def traitement_question(phrase):
     return res
 
 def identif_quest(mots:list, matrice:dict):
+    """Prend en paramètre une liste de mots et une matrice TF-IDF et renvoi la liste des mots
+    non présent dans la matrice TF-IDF"""
     mots_present = []
     for i in mots:
         if i in matrice:
@@ -245,6 +254,8 @@ def identif_quest(mots:list, matrice:dict):
     return mots_present
 
 def score_quetion(mots, mots_present, matrice_IDF):
+    """Prend en paramètre une liste de mot, la liste de ces mots présents dans la matrice TF-IDF et la matrice elle même
+    et retourne un vecteur de cette matrice avec les scores TF-IDF de la question"""
     matrice_mots = {}
     for i in mots:
         if i in mots_present:
@@ -260,8 +271,10 @@ def score_quetion(mots, mots_present, matrice_IDF):
     return matrice_mots
 
 def matrice_TFIDF(matrice):
+    """Prend en paramètre une matrice TF-IDF sous sa forme losrs de sa création et renvoi cette matrice sous la nouvelle
+    forme qui est un documentaire avec comme clé les différents documents et comme valeurs un autre dictionnaire
+    contenant comme clé les différents mots et comme valeur leur score TF-IDF"""
     new_matrice = {}
-
     for cle, values in matrice.items():
         for i, value in enumerate(values):
             cle_doc = files_names[i]
@@ -272,24 +285,28 @@ def matrice_TFIDF(matrice):
     return new_matrice
 
 def produit_scalaire(a, b):
+    """Prend deux vecteurs et renvoi leur produit scalaire"""
     res = 0
     for cle in a.keys():
         res += a[cle] * b[cle]
     return res
 
 def norme_vecteur(a):
+    """Prend comme paramètre un vecteur et renvoi sa norme"""
     res = 0
     for value in a.values():
         res += value ** 2
     return m.sqrt(res)
 
 def calcul_similarite(a, b):
+    """Calcul la similarité cosinus entre deux vecteurs"""
     return produit_scalaire(a, b) / (norme_vecteur(a) * norme_vecteur(b))
 
 def doc_pertinent(questionTFIDF, matriceTFIDF):
+    """Prend comme entrée le vecteur TF-IDF de la question et la matrice TF-IDF sous sa deuxième forme et retourne le
+    document avec la plus similarité cosinus"""
     score_max = (0, 0)
     for cle, value in matriceTFIDF.items():
-        #print(value)
         simil = calcul_similarite(questionTFIDF, value)
         if simil > score_max[0]:
             score_max = (simil, cle)
