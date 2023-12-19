@@ -26,7 +26,7 @@ def is_letter(char):
     return False
 
 def clean_txt(nouveau_dossier="./cleaned"):
-    """Prend en entré un dossier dans lequel il va réécrire tous les textes du fichier principale
+    """Prend en paramètre un dossier dans lequel il va réécrire tous les textes du fichier principal
     sous la forme d'une liste de mots"""
     dossier = "./speeches"
     files_names = list_of_files(dossier, "txt")
@@ -45,6 +45,7 @@ def clean_txt(nouveau_dossier="./cleaned"):
                     elif char == 45 or char == 39:
                         if is_letter(ord(j[n-1])) and is_letter(ord(j[n+1])):
                             clean += " "
+            write.write(clean)
 
 def count_mots(txt):
     """Prend une liste de mots et renvoie un dictionnaire avec comme clé chaque mots du texte et comme valeur
