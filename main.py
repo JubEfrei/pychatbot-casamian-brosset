@@ -71,19 +71,18 @@ def count_IDF(dossier ="./cleaned"):
             txt = txt.split()
             mots = []
             for j in txt:
-                if not j in mots:
-                    if j in compte:
-                        compte[j] += 1
-                    else:
-                        compte[j] = 1
-                    mots.append(j)
+                if j in compte:
+                    compte[j] += 1
+                else:
+                    compte[j] = 1
+                mots.append(j)
 
     for cle, value in compte.items():
             compte[cle] = m.log10(1/(value/8))
     return compte
 
 
-def tableau_TFIDF(dossier ="./cleaned"):
+def tableau_TFIDF(dossier="./cleaned"):
     """Prends comme entrée un dossier et renvoie la matrice TF-IDF de ce dossier sous forme de dictionnaire"""
     fichiers = list_of_files(dossier)
     l = len(fichiers)
@@ -146,32 +145,39 @@ def nation(dico, l_p = nom_discours):
     """Prend comme paramètre la matrice TFIDF et la liste des présidents puis renvoie le président qui parle le
     plus de la nation et combien de fois il en parle"""
     TFIDF_nation = dico["nation"]
-    president = {}
-    for i in l_p:
-        president[i] = 0
-    for i in range(len(TFIDF_nation)):
-        president[l_p[i]] += TFIDF_nation[i]
-    max = 0
-    nom = ""
-    for cle, valeur in president.items():
-        if max < valeur:
-            max = valeur
-            nom = cle
-    return (list(president.keys()), nom)
+    somme_nation = 0
+    for i in TFIDF_nation:
+        somme_nation += i
+    if somme_nation != 0:
+        president = {}
+        for i in l_p:
+            president[i] = 0
+        for i in range(len(TFIDF_nation)):
+            president[l_p[i]] += TFIDF_nation[i]
+        max = 0
+        nom = ""
+        liste_nation = []
+        for cle, valeur in president.items():
+            if valeur > 0:
+                liste_nation.append(cle)
+            if max < valeur:
+                max = valeur
+                nom = cle
+    else:
+        print("Tous les présidents on parle de la nation.")
+
+
+    return (liste_nation, nom)
 
 def president_eco(dico, l_p = nom_discours):
     """Pend comme paramètre l matrice TF-IDf et la liste des président et renvoie ceux qui
     parle de climat ou d'ecologie"""
     climat = dico["climat"]
-    ecologie = dico["écologie"]
     liste_pres = []
     for i in range(len(climat)):
         if climat[i] != 0:
             liste_pres.append(l_p[i])
-    for i in range(len(ecologie)):
-        if ecologie[i] != 0:
-            if l_p[i] not in liste_pres:
-                liste_pres.append(l_p[i])
+
     return liste_pres
 
 def Pcleaned(dossier ="./cleaned", nouv_dossier ="./PCleaned", liste_nom=liste_noms, liste_p=nom_discours):
@@ -306,21 +312,20 @@ def doc_pertinent(questionTFIDF, matriceTFIDF):
     return score_max[1]
 
 b = matrice_TFIDF(tableau_TFIDF())
-def mot_score_eleve(matrice):
+def mot_score_eleve(question, matrice_doc):
     """Renvoie le mot ayant le score le + élevé dans la matrice, et prend en parametre la matrice"""
     max=0
-    mot=""
-    for cle, value in matrice.items():
-            if value>max:
-                max=value
-                mot=cle
+    for cle, valeur in question.items():
+            if valeur >= max and matrice_doc[cle] != 0:
+                max = valeur
+                mot = cle
     return mot
 
 def phrase_mot(doc,mot_imp):
     """Retrouve la 1ere phrase dans un discours dans lequel apparait le mot ayant le + haut score
     de la question et la renvoie"""
     ch="./Speeches/"
-    doc=ch + doc
+    doc = ch + doc
     with open(doc, "r", encoding='utf-8') as f:
         for l in f:
             if mot_imp in l:
@@ -356,31 +361,31 @@ for i in liste_noms:
 #########################################################################################################
 ############################################ PROGRAMME PRINCIPAL ########################################
 run=0
-matrice_TFIDF = tableau_TFIDF()
+matrice_TF_IDF = tableau_TFIDF()
 
 while run==0:
     fonction=input("entrez le nom d'une fonction pour accéder à celle-ci, entrez '?' pour voir le catalogue des commandes disponibles, ou entrez 'end' pour arreter le programme. ")
-    if fonction=="mot non importants":
-        print(no_imp_mot(matrice_TFIDF))
-    elif fonction=="mot important":
-        print(imp_mot(matrice_TFIDF))
-    elif fonction=="mot de Chirac":
-        print(mot_chirac(no_imp_mot(matrice_TFIDF)))
-    elif fonction=="importance de la nation":
-        print(nation(matrice_TFIDF))
-    elif fonction=="importance de l'écologie":
+    if fonction == "mot non importants":
+        print(no_imp_mot(matrice_TF_IDF))
+    elif fonction == "mot important":
+        print(imp_mot(matrice_TF_IDF))
+    elif fonction == "mot de Chirac":
+        print(mot_chirac(no_imp_mot(matrice_TF_IDF)))
+    elif fonction == "importance de la nation":
+        print(nation(matrice_TF_IDF))
+    elif fonction == "importance de l'écologie":
         print(president_eco(tableau_TFIDF()))
-    elif fonction=="répétiton des présidents":
+    elif fonction == "répétiton des présidents":
         print(Pcleaned())
     elif fonction == "matrice":
-        print(tableau_TFIDF())
+        print(matrice_TF_IDF)
     elif fonction == "actualiser":
         clean_txt("./cleaned")
-        matrice_TFIDF = tableau_TFIDF()
+        matrice_TF_IDF = tableau_TFIDF()
         print("La matrcie TF-IDF à été actualisé")
-    elif fonction=="?":
+    elif fonction == "?":
         print("Voici le catalogue des fonctions disponibles:", " \n"
-              "'matrice' : Affiche la matrice TF-IDF"
+              "'matrice' : Affiche la matrice TF-IDF", " \n"
               "'mot non importants' : Affiche la liste des mots les moins importants dans le corpus de documents", " \n"
               "'atualiser' : Actualise la matrice TF-IDF apres ajout d'un texte dans le corpus", " \n"                                                                                                    
               "'mot important' : Affiche le(s) mot(s) ayant le score TD-IDF le plus élevé", " \n"
@@ -400,9 +405,10 @@ while run==0:
                 matrice = tableau_TFIDF()
                 score_idf = count_IDF()
                 mots_present = identif_quest(question, matrice)
-                print(reponse(QUESTION_STARTER, question), phrase_mot(
-                    doc_pertinent(score_quetion(question, mots_present, score_idf), matrice_TFIDF(tableau_TFIDF())),
-                    mot_score_eleve(score_quetion(question, mots_present, score_idf))))
+                nouv_matrice = matrice_TFIDF(matrice_TF_IDF)
+                discours = doc_pertinent(score_quetion(question, mots_present, score_idf), nouv_matrice)
+                mot_important = mot_score_eleve(score_quetion(question, mots_present, score_idf), nouv_matrice[discours])
+                print(reponse(QUESTION_STARTER, question), phrase_mot(discours, mot_important))
             else:
                 continu = False
 
