@@ -9,22 +9,7 @@ def list_of_files(dossier, extension="txt"):
             files_names.append(filename)
     return files_names
 
-#initialisation de variables utilisé par diverses fonctions
-QUESTION_STARTER = {
- "comment": "Après analyse, ",
- "pourquoi": "Car, ",
- "peux tu": "Oui, bien sûr!"
-}
-liste_noms = []
-nom_discours = []
-dico_nomp={}
-liste_prenoms=["Jacques","Valérie","François","Emmanuel","François","Nicolas"]
-dossier = "./speeches"
-files_names = list_of_files(dossier, "txt")
-
-
 def is_letter(char):
-    """Prend en entrée un code ASCII et renvoi True sdi c'est une lettre, False si ce n'est pas une lettre """
     if 96 < char < 123 or 231 <= char <= 234 or char == 224 or char == 249 or char == 244 or char == 226:
         return True
     return False
@@ -50,8 +35,25 @@ def clean_txt(nouveau_dossier="./cleaned"):
                         if is_letter(ord(j[n-1])) and is_letter(ord(j[n+1])):
                             clean += " "
 
-                clean += " "
-            write.write(clean)
+
+liste_noms=list_of_files("./speeches")
+liste_prenoms=["Jacques","Jacques","Valérie","François","Emmanuel","François","François","Nicolas"]
+dico_nomp={}
+for i in range(len(liste_noms)):
+    dico_nomp[liste_noms[i]]=liste_prenoms[i]
+
+#Attribution des noms aux présiendents, avec un liste de noms, une liste de nom par rapport aux discours
+# et un dictionnaire de nom et de prénom
+nom_discours=[]
+for i in liste_noms:
+    nom = i.strip("Nomination_").strip(".txt")
+    while ord(nom[-1]) > 47 and ord(nom[-1]) < 58:
+        nom = nom.strip(nom[-1])
+    if nom not in liste_noms:
+        liste_noms.append(nom)
+    nom_discours.append(nom)
+
+
 
 
 def count_mots(txt):
@@ -120,7 +122,7 @@ def no_imp_mot(dico):
     return(L)
 
 def imp_mot(dico):
-    """Prend comme entrée une matrice TF-IDF et renvoi le mot avec le score TF-IDF le plus élevé"""
+    """Prend comme entrée une matrice TF-IDF et renvoie le mot avec le score TF-IDF le plus élevé"""
     max=0
     mot_max=None
     for c,value in dico.items():
@@ -150,7 +152,7 @@ def mot_chirac(liste_mot_no_imp):
     return(mot_max)
 
 def nation(dico, l_p = nom_discours):
-    """Prend comme paramètre la matrice TFIDF et la liste des présidents puis renvoi le président qui parle le
+    """Prend comme paramètre la matrice TFIDF et la liste des présidents puis renvoie le président qui parle le
     plus de la nation et combien de fois il en parle"""
     TFIDF_nation = dico["nation"]
     president = {}
@@ -270,7 +272,7 @@ def score_quetion(mots, mots_present, matrice_IDF):
             matrice_mots[cle] = 0
     return matrice_mots
 
-def matrice_TFIDF(matrice):
+def matrice_TFIDF(matrice,files_names=liste_noms):
     """Prend en paramètre une matrice TF-IDF sous sa forme losrs de sa création et renvoi cette matrice sous la nouvelle
     forme qui est un documentaire avec comme clé les différents documents et comme valeurs un autre dictionnaire
     contenant comme clé les différents mots et comme valeur leur score TF-IDF"""
@@ -314,6 +316,7 @@ def doc_pertinent(questionTFIDF, matriceTFIDF):
 
 b = matrice_TFIDF(tableau_TFIDF())
 def mot_score_eleve(matrice):
+    """Renvoie le mot ayant le score le + élevé dans la matrice, et prend en parametre la matrice"""
     max=0
     mot=""
     for cle, value in matrice.items():
@@ -323,6 +326,7 @@ def mot_score_eleve(matrice):
     return mot
 
 def phrase_mot(doc,mot_imp):
+    """Retrouve la 1ere phrase dans un discours dans lequel apparait le mot ayant le + haut score de la question et la renvoie"""
     ch="./Speeches/"
     doc=ch + doc
     with open(doc, "r", encoding='utf-8') as f:
@@ -333,27 +337,52 @@ def phrase_mot(doc,mot_imp):
 
 
 def reponse(dico, quest):
+    """Mise en forme des réponses, prend en parametre la question et le dico "question_starters"""
     for cle, val in dico.items():
         if cle in quest:
             return str(val)
         else :
             return ""
 
+QUESTION_STARTER={
+    'pourquoi':'Car,',
+    'peux tu':'Oui, bien sûr !',
+    'comment':'Après analyse,'
+}
+
 
 #print(matrice_TFIDF(tableau_TFIDF()))
 
-#Attribution des noms aux présiendents, avec un liste de noms, une liste de nom par rapport aux discours
-# et un dictionnaire de nom et de prénom
-for i in files_names:
-    nom = i.strip("Nomination_").strip(".txt")
-    while ord(nom[-1]) > 47 and ord(nom[-1]) < 58:
-        nom = nom.strip(nom[-1])
-    if nom not in liste_noms:
-        liste_noms.append(nom)
-    nom_discours.append(nom)
 
-for i in range(len(liste_noms)):
-    dico_nomp[liste_noms[i]] = liste_prenoms[i]
+
+#########################################################################################################
+#########################################################################################################
+
+
+"""
+def mot_evo_hors_no_imp():
+    files = list_of_files(directory)
+    l = len(files)
+    IDF = count_IDF(directory)
+    matrice_TFIDF = {}
+    for key in IDF.keys():
+        matrice_TFIDF[key] = [0 for i in range(l)]
+    i = 0
+    with open("./cleaned/Nomination_Chirac1.txt", "r", encoding="UTF8") as f1:
+        with open("./cleaned/Nomination_Chirac2.txt") as f2:
+            a=f1.readline()
+            b=f2.readline()
+            fc=a+" "+b
+    with open("./cleaned/Nomination_Mitterrand1.txt", "r", encoding="UTF8") as f3:
+        with open("./cleaned/Nomination_Mitterrand2.txt") as f4:
+            a=f3.readline()
+            b=f4.readline()
+            fmi=a+" "+b
+    with open("./cleaned/Nomination_Giscard dEstaing.txt", "r", encoding="UTF8") as f5:
+        fg=f5.readline()
+    with open("./cleaned/Nomination_Hollande.txt", "r", encoding="UTF8") as f6:
+        fh=f6.readline()
+        """
 
 #########################################################################################################
 ############################################ PROGRAMME PRINCIPAL ########################################
@@ -362,10 +391,10 @@ while run==0:
     fonction=input("entrez le nom d'une fonction pour accéder à celle-ci, entrez '?' pour voir le catalogue des commandes disponibles, ou entrez 'end' pour arreter le programme. ")
     if fonction=="mot non importants":
         print(no_imp_mot(tableau_TFIDF()))
-    elif fonction=="imp_mot()":
+    elif fonction=="mot important":
         print(imp_mot(tableau_TFIDF()))
     elif fonction=="mot de Chirac":
-        print(mot_chirac())
+        print(mot_chirac(no_imp_mot(tableau_TFIDF())))
     elif fonction=="importance de la nation":
         print(nation(tableau_TFIDF()))
     elif fonction=="importance de l'écologie":
@@ -389,7 +418,7 @@ while run==0:
     elif fonction == "Chatbot":
         continu = True
         while continu:
-            demande = input("Poser une question ('end' pour quitter le chat bot): ")
+            demande = input("Poser une question ('end' pour quitter le Chatbot): ")
             if demande != "end":
                 question = traitement_question(demande)
                 matrice = tableau_TFIDF()
