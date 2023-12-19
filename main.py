@@ -355,26 +355,33 @@ for i in liste_noms:
 #########################################################################################################
 ############################################ PROGRAMME PRINCIPAL ########################################
 run=0
+matrice_TFIDF = tableau_TFIDF()
+
 while run==0:
     fonction=input("entrez le nom d'une fonction pour accéder à celle-ci, entrez '?' pour voir le catalogue des commandes disponibles, ou entrez 'end' pour arreter le programme. ")
     if fonction=="mot non importants":
-        print(no_imp_mot(tableau_TFIDF()))
+        print(no_imp_mot(matrice_TFIDF))
     elif fonction=="mot important":
-        print(imp_mot(tableau_TFIDF()))
+        print(imp_mot(matrice_TFIDF))
     elif fonction=="mot de Chirac":
-        print(mot_chirac(no_imp_mot(tableau_TFIDF())))
+        print(mot_chirac(no_imp_mot(matrice_TFIDF)))
     elif fonction=="importance de la nation":
-        print(nation(tableau_TFIDF()))
+        print(nation(matrice_TFIDF))
     elif fonction=="importance de l'écologie":
         print(president_eco(tableau_TFIDF()))
     elif fonction=="répétiton des présidents":
         print(Pcleaned())
     elif fonction == "matrice":
         print(tableau_TFIDF())
+    elif fonction == "actualiser":
+        clean_txt("./cleaned")
+        matrice_TFIDF = tableau_TFIDF()
+        print("La matrcie TF-IDF à été actualisé")
     elif fonction=="?":
         print("Voici le catalogue des fonctions disponibles:", " \n"
               "'matrice' : Affiche la matrice TF-IDF"
               "'mot non importants' : Affiche la liste des mots les moins importants dans le corpus de documents", " \n"
+              "'atualiser' : Actualise la matrice TF-IDF apres ajout d'un texte dans le corpus", " \n"                                                                                                    
               "'mot important' : Affiche le(s) mot(s) ayant le score TD-IDF le plus élevé", " \n"
               "'mot de Chirac' : Indique le(s) mot(s) le(s) plus répété(s) par le président Chirac", " \n"
               "'importance de la nation' : Indique le(s) nom(s) du (des) président(s) qui a (ont) parlé de la « Nation » et celui qui l’a répété le plus de fois", " \n"
