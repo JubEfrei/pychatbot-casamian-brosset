@@ -9,6 +9,17 @@ def list_of_files(dossier, extension="txt"):
             files_names.append(filename)
     return files_names
 
+
+QUESTION_STARTER={
+    'pourquoi':'Car,',
+    'peux tu':'Oui, bien sûr !',
+    'comment':'Après analyse,'
+}
+liste_noms = list_of_files("./speeches")
+liste_prenoms = ["Jacques","Jacques","Valérie","François","Emmanuel","François","François","Nicolas"]
+dico_nomp = {}
+nom_discours=[]
+
 def is_letter(char):
     if 96 < char < 123 or 231 <= char <= 234 or char == 224 or char == 249 or char == 244 or char == 226:
         return True
@@ -34,27 +45,6 @@ def clean_txt(nouveau_dossier="./cleaned"):
                     elif char == 45 or char == 39:
                         if is_letter(ord(j[n-1])) and is_letter(ord(j[n+1])):
                             clean += " "
-
-
-liste_noms=list_of_files("./speeches")
-liste_prenoms=["Jacques","Jacques","Valérie","François","Emmanuel","François","François","Nicolas"]
-dico_nomp={}
-for i in range(len(liste_noms)):
-    dico_nomp[liste_noms[i]]=liste_prenoms[i]
-
-#Attribution des noms aux présiendents, avec un liste de noms, une liste de nom par rapport aux discours
-# et un dictionnaire de nom et de prénom
-nom_discours=[]
-for i in liste_noms:
-    nom = i.strip("Nomination_").strip(".txt")
-    while ord(nom[-1]) > 47 and ord(nom[-1]) < 58:
-        nom = nom.strip(nom[-1])
-    if nom not in liste_noms:
-        liste_noms.append(nom)
-    nom_discours.append(nom)
-
-
-
 
 def count_mots(txt):
     """Prend une liste de mots et renvoie un dictionnaire avec comme clé chaque mots du texte et comme valeur
@@ -326,7 +316,8 @@ def mot_score_eleve(matrice):
     return mot
 
 def phrase_mot(doc,mot_imp):
-    """Retrouve la 1ere phrase dans un discours dans lequel apparait le mot ayant le + haut score de la question et la renvoie"""
+    """Retrouve la 1ere phrase dans un discours dans lequel apparait le mot ayant le + haut score
+    de la question et la renvoie"""
     ch="./Speeches/"
     doc=ch + doc
     with open(doc, "r", encoding='utf-8') as f:
@@ -341,48 +332,25 @@ def reponse(dico, quest):
     for cle, val in dico.items():
         if cle in quest:
             return str(val)
-        else :
+        else:
             return ""
 
-QUESTION_STARTER={
-    'pourquoi':'Car,',
-    'peux tu':'Oui, bien sûr !',
-    'comment':'Après analyse,'
-}
-
-
-#print(matrice_TFIDF(tableau_TFIDF()))
-
-
 
 #########################################################################################################
 #########################################################################################################
+#Attribution des noms aux présiendents, avec un liste de noms, une liste de nom par rapport aux discours
+# et un dictionnaire de nom et de prénom
 
+for i in range(len(liste_noms)):
+    dico_nomp[liste_noms[i]]=liste_prenoms[i]
 
-"""
-def mot_evo_hors_no_imp():
-    files = list_of_files(directory)
-    l = len(files)
-    IDF = count_IDF(directory)
-    matrice_TFIDF = {}
-    for key in IDF.keys():
-        matrice_TFIDF[key] = [0 for i in range(l)]
-    i = 0
-    with open("./cleaned/Nomination_Chirac1.txt", "r", encoding="UTF8") as f1:
-        with open("./cleaned/Nomination_Chirac2.txt") as f2:
-            a=f1.readline()
-            b=f2.readline()
-            fc=a+" "+b
-    with open("./cleaned/Nomination_Mitterrand1.txt", "r", encoding="UTF8") as f3:
-        with open("./cleaned/Nomination_Mitterrand2.txt") as f4:
-            a=f3.readline()
-            b=f4.readline()
-            fmi=a+" "+b
-    with open("./cleaned/Nomination_Giscard dEstaing.txt", "r", encoding="UTF8") as f5:
-        fg=f5.readline()
-    with open("./cleaned/Nomination_Hollande.txt", "r", encoding="UTF8") as f6:
-        fh=f6.readline()
-        """
+for i in liste_noms:
+    nom = i.strip("Nomination_").strip(".txt")
+    while 47 < ord(nom[-1]) < 58:
+        nom = nom.strip(nom[-1])
+    if nom not in liste_noms:
+        liste_noms.append(nom)
+    nom_discours.append(nom)
 
 #########################################################################################################
 ############################################ PROGRAMME PRINCIPAL ########################################
