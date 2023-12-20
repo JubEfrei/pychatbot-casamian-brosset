@@ -269,7 +269,6 @@ def score_quetion(mots, mots_present, matrice_IDF):
             matrice_mots[cle] *= value
         else:
             matrice_mots[cle] = 0
-    print(matrice_mots)
     return matrice_mots
 
 def matrice_TFIDF(matrice,files_names=liste_noms):
@@ -322,7 +321,6 @@ def mot_score_eleve(question, matrice_doc):
             if valeur >= max and matrice_doc[cle] != 0:
                 max = valeur
                 mot = cle
-
     return mot
 
 def phrase_mot(doc,mot_imp):
