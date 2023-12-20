@@ -74,7 +74,7 @@ def count_IDF(dossier ="./cleaned"):
                 if j in compte and j not in mots:
                     compte[j] += 1
                     mots += j
-                else:
+                elif j not in compte:
                     compte[j] = 1
                     mots += j
                 mots.append(j)
@@ -364,6 +364,7 @@ for i in liste_noms:
 ############################################ PROGRAMME PRINCIPAL ########################################
 run=0
 matrice_TF_IDF = tableau_TFIDF()
+print(count_IDF())
 
 while run==0:
     fonction=input("entrez le nom d'une fonction pour accéder à celle-ci, entrez '?' pour voir le catalogue des commandes disponibles, ou entrez 'end' pour arreter le programme. ")
