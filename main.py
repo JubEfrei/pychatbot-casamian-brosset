@@ -71,14 +71,16 @@ def count_IDF(dossier ="./cleaned"):
             txt = txt.split()
             mots = []
             for j in txt:
-                if j in compte:
+                if j in compte and j not in mots:
                     compte[j] += 1
+                    mots += j
                 else:
                     compte[j] = 1
+                    mots += j
                 mots.append(j)
 
     for cle, value in compte.items():
-            compte[cle] = m.log10(1/(value/8))
+            compte[cle] = m.log10(len(files_names)/value)
     return compte
 
 
@@ -267,6 +269,7 @@ def score_quetion(mots, mots_present, matrice_IDF):
             matrice_mots[cle] *= value
         else:
             matrice_mots[cle] = 0
+    print(matrice_mots)
     return matrice_mots
 
 def matrice_TFIDF(matrice,files_names=liste_noms):
@@ -313,12 +316,13 @@ def doc_pertinent(questionTFIDF, matriceTFIDF):
 
 b = matrice_TFIDF(tableau_TFIDF())
 def mot_score_eleve(question, matrice_doc):
-    """Renvoie le mot ayant le score le + élevé dans la matrice, et prend en parametre la matrice"""
+    """Renvoie le mot ayant le score le + élevé dans la matrice, et prend en paramètre la matrice"""
     max=0
     for cle, valeur in question.items():
             if valeur >= max and matrice_doc[cle] != 0:
                 max = valeur
                 mot = cle
+
     return mot
 
 def phrase_mot(doc,mot_imp):
