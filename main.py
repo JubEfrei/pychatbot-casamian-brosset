@@ -163,8 +163,9 @@ def nation(dico, l_p = nom_discours):
             if max < valeur:
                 max = valeur
                 nom = cle
+        return (liste_nation, nom)
     else:
-        print("Tous les présidents on parle de la nation.")
+        return("Tous les présidents on parle de la nation.")
 
 
     return (liste_nation, nom)
