@@ -73,11 +73,11 @@ def count_IDF(dossier ="./cleaned"):
             for j in txt:
                 if j in compte and j not in mots:
                     compte[j] += 1
-                    mots += j
+                    mots.append(j)
                 elif j not in compte:
                     compte[j] = 1
-                    mots += j
-                mots.append(j)
+                    mots.append(j)
+
 
     for cle, value in compte.items():
             compte[cle] = m.log10(len(files_names)/value)
@@ -365,10 +365,9 @@ for i in liste_noms:
 run=0
 matrice_TF_IDF = tableau_TFIDF()
 print(count_IDF())
-
 while run==0:
     fonction=input("entrez le nom d'une fonction pour accéder à celle-ci, entrez '?' pour voir le catalogue des commandes disponibles, ou entrez 'end' pour arreter le programme. ")
-    if fonction == "mot non importants":
+    if fonction == "mots non importants":
         print(no_imp_mot(matrice_TF_IDF))
     elif fonction == "mot important":
         print(imp_mot(matrice_TF_IDF))
@@ -389,7 +388,7 @@ while run==0:
     elif fonction == "?":
         print("Voici le catalogue des fonctions disponibles:", " \n"
               "'matrice' : Affiche la matrice TF-IDF", " \n"
-              "'mot non importants' : Affiche la liste des mots les moins importants dans le corpus de documents", " \n"
+              "'mots non importants' : Affiche la liste des mots les moins importants dans le corpus de documents", " \n"
               "'atualiser' : Actualise la matrice TF-IDF apres ajout d'un texte dans le corpus", " \n"                                                                                                    
               "'mot important' : Affiche le(s) mot(s) ayant le score TD-IDF le plus élevé", " \n"
               "'mot de Chirac' : Indique le(s) mot(s) le(s) plus répété(s) par le président Chirac", " \n"
