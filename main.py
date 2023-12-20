@@ -165,10 +165,8 @@ def nation(dico, l_p = nom_discours):
                 nom = cle
         return (liste_nation, nom)
     else:
-        return("Tous les présidents on parle de la nation.")
+        return("Tous les présidents on parlé de la nation.")
 
-
-    return (liste_nation, nom)
 
 def president_eco(dico, l_p = nom_discours):
     """Pend comme paramètre l matrice TF-IDf et la liste des président et renvoie ceux qui
