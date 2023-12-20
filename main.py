@@ -121,6 +121,7 @@ def imp_mot(dico):
             i+=valeur
         if i>max:
             mot_max=c
+            max = i
     return(mot_max)
 
 
@@ -165,12 +166,12 @@ def nation(dico, l_p = nom_discours):
                 nom = cle
         return (liste_nation, nom)
     else:
-        return("Tous les présidents on parlé de la nation.")
+        return("Tous les présidents ont parlés de la nation.")
 
 
 def president_eco(dico, l_p = nom_discours):
-    """Pend comme paramètre l matrice TF-IDf et la liste des président et renvoie ceux qui
-    parle de climat ou d'ecologie"""
+    """Pend comme paramètre l matrice TF-IDf et la liste des présidents et renvoie ceux qui
+    parle de climat ou d'écologie"""
     climat = dico["climat"]
     liste_pres = []
     for i in range(len(climat)):
@@ -180,8 +181,8 @@ def president_eco(dico, l_p = nom_discours):
     return liste_pres
 
 def Pcleaned(dossier ="./cleaned", nouv_dossier ="./PCleaned", liste_nom=liste_noms, liste_p=nom_discours):
-    """Prend en paramètre le dossier des texte déja traité, un nouveau dossier de sortie, la liste des président et
-    la liste qui associe chaque discours à un président pui regroupe tout les discours différents des même président
+    """Prend en paramètre le dossier des textes déja traité, un nouveau dossier de sortie, la liste des présidents et
+    la liste qui associe chaque discours à un président pui regroupe tous les discours différents des même président
     sous un même dossier permettant la création d'un nouveau corpus de documents ou chaque fichier ne correspond plus
     à un discour mais à un président"""
     files_names = list_of_files(dossier, "txt")
