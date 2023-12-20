@@ -4,9 +4,6 @@ from Fonctions import *
 
 run=0
 matrice_TF_IDF = tableau_TFIDF()
-x = matrice_TFIDF(matrice_TF_IDF)
-for i,j in x.items() :
-    print(i, j)
 
 
 while run==0:
